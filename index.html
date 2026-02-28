@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Venkata Madhu Puli — Market Analysis Portfolio</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=Inter:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F7F4EF;
+  --white: #FFFFFF;
+  --ink: #1A1A1A;
+  --mid: #4A4A4A;
+  --muted: #8A8A8A;
+  --line: #E2DDD8;
+  --accent: #C94B1E;
+  --accent2: #2E6BA8;
+  --accent3: #2A7A5A;
+  --warm: #E8A838;
+  --panel: #1E2530;
+  --panel2: #252D3A;
+  --serif: 'Playfair Display', Georgia, serif;
+  --sans: 'Inter', system-ui, sans-serif;
+  --mono: 'IBM Plex Mono', monospace;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { font-family:var(--sans); background:var(--bg); color:var(--ink); }
+
+.site-header {
+  background:var(--white); border-bottom:2px solid var(--ink);
+  padding:1.2rem 3rem; display:flex; justify-content:space-between; align-items:center;
+  position:sticky; top:0; z-index:100;
+}
+.header-name { font-family:var(--serif); font-size:1.1rem; }
+.header-name span { color:var(--accent); }
+.header-nav { display:flex; gap:1.6rem; }
+.header-nav a { font-size:0.72rem; font-weight:500; letter-spacing:0.08em; text-transform:uppercase; color:var(--mid); text-decoration:none; transition:color 0.2s; }
+.header-nav a:hover { color:var(--accent); }
+.header-tag { font-family:var(--mono); font-size:0.65rem; color:var(--muted); border:1px solid var(--line); padding:0.25rem 0.7rem; }
+
+.hero { background:var(--panel); padding:5rem 3rem 4rem; position:relative; overflow:hidden; }
+.hero::after { content:''; position:absolute; right:0; top:0; bottom:0; width:42%; background:repeating-linear-gradient(-45deg,transparent,transparent 20px,rgba(255,255,255,0.015) 20px,rgba(255,255,255,0.015) 21px); }
+.hero-h1 { font-family:var(--serif); font-size:clamp(2.8rem,5vw,5rem); color:#FFF; line-height:1.05; margin-bottom:0.8rem; max-width:700px; }
+.hero-h1 em { color:var(--warm); font-style:italic; }
+.hero-sub { font-size:1rem; color:rgba(255,255,255,0.45); max-width:560px; line-height:1.7; margin-bottom:3rem; }
+.hero-chips { display:flex; flex-wrap:wrap; gap:0.6rem; margin-bottom:3rem; }
+.chip { font-family:var(--mono); font-size:0.62rem; letter-spacing:0.1em; padding:0.3rem 0.8rem; border:1px solid rgba(255,255,255,0.15); color:rgba(255,255,255,0.5); text-transform:uppercase; }
+.chip.hi { border-color:rgba(201,75,30,0.6); color:rgba(201,75,30,0.9); background:rgba(201,75,30,0.08); }
+.chip.gold { border-color:rgba(232,168,56,0.6); color:rgba(232,168,56,0.9); background:rgba(232,168,56,0.08); }
+.hero-jump { display:flex; gap:1rem; flex-wrap:wrap; }
+.jump-btn { display:inline-flex; align-items:center; gap:0.5rem; padding:0.65rem 1.3rem; font-size:0.78rem; font-weight:500; letter-spacing:0.06em; text-decoration:none; text-transform:uppercase; transition:all 0.2s; font-family:var(--sans); }
+.jump-btn.solid { background:var(--accent); color:white; }
+.jump-btn.solid:hover { background:#A83A10; }
+.jump-btn.solid-gold { background:var(--warm); color:#1A1A1A; }
+.jump-btn.solid-gold:hover { background:#C88A20; }
+.jump-btn.outline { background:transparent; color:rgba(255,255,255,0.55); border:1px solid rgba(255,255,255,0.2); }
+.jump-btn.outline:hover { border-color:rgba(255,255,255,0.5); color:white; }
+.jn { font-family:var(--mono); font-size:0.58rem; color:var(--warm); margin-right:0.15rem; }
+.jn.dark { color:#1A1A1A; }
+
+.section { padding:3.5rem 3rem; }
+.section + .section { border-top:1px solid var(--line); }
+.section-header { margin-bottom:2.5rem; display:flex; gap:3rem; align-items:flex-start; flex-wrap:wrap; }
+.sh-left { flex:0 0 auto; }
+.sh-right { flex:1; min-width:280px; }
+.sec-num { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.18em; color:var(--accent); text-transform:uppercase; margin-bottom:0.4rem; }
+.sec-num.gold { color:var(--warm); }
+.sec-title { font-family:var(--serif); font-size:2rem; color:var(--ink); line-height:1.15; }
+.sec-title em { color:var(--accent); }
+.sec-title em.gold { color:var(--warm); }
+.sec-meta { font-family:var(--mono); font-size:0.62rem; color:var(--muted); margin-top:0.4rem; line-height:1.6; }
+.sec-desc { font-size:0.88rem; line-height:1.75; color:var(--mid); padding-top:0.3rem; }
+
+.dash { background:var(--panel); padding:2rem; margin-bottom:1px; }
+.dash-light { background:var(--white); padding:2rem; margin-bottom:1px; border:1px solid var(--line); }
+.dash-gold { background:#1A1400; padding:2rem; margin-bottom:1px; border:1px solid rgba(232,168,56,0.2); }
+.dash-title { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:1.2rem; }
+.dash-title-dark { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.14em; color:var(--muted); text-transform:uppercase; margin-bottom:1.2rem; }
+.dash-title-gold { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.14em; color:rgba(232,168,56,0.5); text-transform:uppercase; margin-bottom:1.2rem; }
+.dash-src { font-family:var(--mono); font-size:0.52rem; color:rgba(255,255,255,0.18); margin-top:0.8rem; }
+.dash-src-dark { font-family:var(--mono); font-size:0.52rem; color:var(--muted); margin-top:0.8rem; }
+.dash-src-gold { font-family:var(--mono); font-size:0.52rem; color:rgba(232,168,56,0.3); margin-top:0.8rem; }
+
+.g2 { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+.g3 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:2px; }
+.g21 { display:grid; grid-template-columns:2fr 1fr; gap:2px; }
+.g12 { display:grid; grid-template-columns:1fr 2fr; gap:2px; }
+.g1 { display:grid; grid-template-columns:1fr; }
+
+.kpi-strip { display:grid; gap:2px; margin-bottom:2px; }
+.ks3 { grid-template-columns:repeat(3,1fr); }
+.ks4 { grid-template-columns:repeat(4,1fr); }
+.ks5 { grid-template-columns:repeat(5,1fr); }
+.kpi-box { background:var(--white); padding:1.4rem 1.6rem; border:1px solid var(--line); }
+.kpi-box.dark { background:var(--panel2); border:none; }
+.kpi-box.gold { background:#1A1400; border:1px solid rgba(232,168,56,0.2); }
+.kb-label { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.12em; color:var(--muted); text-transform:uppercase; margin-bottom:0.5rem; }
+.kb-label.lt { color:rgba(255,255,255,0.35); }
+.kb-label.gd { color:rgba(232,168,56,0.45); }
+.kb-val { font-family:var(--serif); font-size:2rem; line-height:1; margin-bottom:0.3rem; color:var(--ink); }
+.kb-val.lt { color:#FFF; }
+.kb-val.acc { color:var(--accent); }
+.kb-val.acc2 { color:var(--accent2); }
+.kb-val.acc3 { color:var(--accent3); }
+.kb-val.warm { color:var(--warm); }
+.kb-change { font-size:0.68rem; color:var(--muted); line-height:1.4; }
+.kb-change.up { color:var(--accent3); }
+.kb-change.dn { color:var(--accent); }
+.kb-change.lt { color:rgba(255,255,255,0.3); }
+.kb-change.gd { color:rgba(232,168,56,0.5); }
+
+.insight-box { background:var(--bg); border:1px solid var(--line); border-left:4px solid var(--accent); padding:1.5rem 2rem; margin-top:2px; }
+.insight-box.blue { border-left-color:var(--accent2); }
+.insight-box.green { border-left-color:var(--accent3); }
+.insight-box.gold { background:#0F0D00; border-color:rgba(232,168,56,0.2); border-left-color:var(--warm); }
+.ib-label { font-family:var(--mono); font-size:0.58rem; letter-spacing:0.14em; color:var(--accent); text-transform:uppercase; margin-bottom:0.6rem; }
+.ib-label.blue { color:var(--accent2); }
+.ib-label.green { color:var(--accent3); }
+.ib-label.gold { color:var(--warm); }
+.ib-body { font-size:0.87rem; line-height:1.75; color:var(--mid); }
+.ib-body.lt { color:rgba(255,255,255,0.6); }
+.ib-body strong { color:var(--ink); font-weight:600; }
+.ib-body.lt strong { color:#fff; }
+
+.vv-box { background:linear-gradient(135deg,#1A2332 0%,#1E2A3A 100%); border:1px solid rgba(232,168,56,0.25); padding:1.8rem 2rem; margin-top:2px; }
+.vv-header { display:flex; align-items:center; gap:0.8rem; margin-bottom:1rem; }
+.vv-icon { width:32px; height:32px; border-radius:50%; background:rgba(232,168,56,0.15); border:1px solid rgba(232,168,56,0.3); display:flex; align-items:center; justify-content:center; font-size:0.7rem; color:var(--warm); font-family:var(--serif); font-weight:600; }
+.vv-name { font-size:0.8rem; font-weight:600; color:#FFF; }
+.vv-role { font-family:var(--mono); font-size:0.58rem; color:rgba(255,255,255,0.35); }
+.vv-label { font-family:var(--mono); font-size:0.57rem; letter-spacing:0.15em; color:var(--warm); text-transform:uppercase; margin-bottom:0.7rem; }
+.vv-text { font-size:0.87rem; line-height:1.78; color:rgba(255,255,255,0.65); font-style:italic; }
+.vv-text strong { color:rgba(255,255,255,0.9); font-style:normal; }
+
+/* Tool cards for dashboard 4 */
+.tool-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-bottom:2px; }
+.tool-card { background:var(--panel2); padding:1.6rem; border-left:3px solid var(--warm); }
+.tc-icon { font-size:1.4rem; margin-bottom:0.7rem; }
+.tc-name { font-family:var(--mono); font-size:0.7rem; font-weight:500; color:var(--warm); margin-bottom:0.4rem; letter-spacing:0.06em; }
+.tc-desc { font-size:0.8rem; line-height:1.65; color:rgba(255,255,255,0.5); }
+.tc-metric { font-family:var(--serif); font-size:1.4rem; color:#fff; margin-top:0.8rem; }
+.tc-metric-label { font-family:var(--mono); font-size:0.52rem; color:rgba(255,255,255,0.3); text-transform:uppercase; }
+
+/* Timeline for dashboard 4 */
+.timeline { padding:1.8rem 2rem; background:var(--panel); margin-bottom:2px; }
+.tl-title { font-family:var(--mono); font-size:0.6rem; letter-spacing:0.14em; color:rgba(255,255,255,0.3); text-transform:uppercase; margin-bottom:1.6rem; }
+.tl-items { position:relative; padding-left:2rem; }
+.tl-items::before { content:''; position:absolute; left:0; top:0; bottom:0; width:1px; background:rgba(255,255,255,0.1); }
+.tl-item { position:relative; margin-bottom:1.4rem; }
+.tl-item:last-child { margin-bottom:0; }
+.tl-dot { position:absolute; left:-2.35rem; top:0.2rem; width:10px; height:10px; border-radius:50%; background:var(--warm); border:2px solid var(--panel); }
+.tl-dot.green { background:var(--accent3); }
+.tl-dot.red { background:var(--accent); }
+.tl-month { font-family:var(--mono); font-size:0.58rem; color:var(--warm); letter-spacing:0.1em; margin-bottom:0.2rem; }
+.tl-month.green { color:var(--accent3); }
+.tl-month.red { color:var(--accent); }
+.tl-action { font-size:0.82rem; font-weight:500; color:#fff; margin-bottom:0.2rem; }
+.tl-detail { font-size:0.78rem; color:rgba(255,255,255,0.45); line-height:1.5; }
+
+.data-table { width:100%; border-collapse:collapse; font-size:0.8rem; }
+.data-table th { font-family:var(--mono); font-size:0.55rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--muted); padding:0.7rem 1rem; border-bottom:2px solid var(--line); text-align:left; white-space:nowrap; }
+.data-table.dark th { color:rgba(255,255,255,0.3); border-bottom-color:rgba(255,255,255,0.08); }
+.data-table td { padding:0.7rem 1rem; border-bottom:1px solid var(--line); color:var(--mid); vertical-align:top; }
+.data-table.dark td { border-bottom-color:rgba(255,255,255,0.06); color:rgba(255,255,255,0.55); }
+.data-table tr:last-child td { border-bottom:none; }
+.data-table tr:hover td { background:rgba(0,0,0,0.02); }
+.data-table.dark tr:hover td { background:rgba(255,255,255,0.03); }
+.badge { display:inline-block; padding:0.15rem 0.55rem; font-family:var(--mono); font-size:0.55rem; font-weight:500; letter-spacing:0.06em; }
+.bg { background:#EAF7F0; color:#1A6B45; border:1px solid #B8E4CC; }
+.br { background:#FEF0EF; color:#B83A1A; border:1px solid #F5BDB4; }
+.bo { background:#FFF8EC; color:#8A5A00; border:1px solid #F5DFA0; }
+.bb { background:#EDF4FD; color:#1A4A8A; border:1px solid #B8D0F0; }
+.bw { background:rgba(232,168,56,0.12); color:#C88A20; border:1px solid rgba(232,168,56,0.3); }
+.pbar { background:var(--line); height:4px; margin-top:0.35rem; overflow:hidden; border-radius:2px; }
+.pbar.dark { background:rgba(255,255,255,0.08); }
+.pfill { height:100%; border-radius:2px; }
+
+.page-div { border:none; border-top:3px solid var(--ink); margin:0 3rem; }
+.page-div.thin { border-width:1px; border-color:var(--line); margin-top:0; }
+.page-div.gold { border-top:3px solid var(--warm); margin:0 3rem; }
+
+.site-footer { background:var(--panel); color:rgba(255,255,255,0.5); padding:3rem; display:flex; justify-content:space-between; align-items:center; margin-top:4rem; }
+.sf-name { font-family:var(--serif); font-size:1.2rem; color:#FFF; }
+.sf-sub { font-family:var(--mono); font-size:0.6rem; color:rgba(255,255,255,0.3); margin-top:0.3rem; }
+.sf-links { display:flex; gap:2rem; }
+.sf-link { font-family:var(--mono); font-size:0.65rem; color:rgba(255,255,255,0.4); text-decoration:none; transition:color 0.2s; }
+.sf-link:hover { color:var(--warm); }
+
+@media(max-width:900px){
+  .site-header { padding:1rem 1.5rem; }
+  .header-nav { display:none; }
+  .hero,.section { padding-left:1.5rem; padding-right:1.5rem; }
+  .page-div,.page-div.gold { margin:0 1.5rem; }
+  .g2,.g3,.g21,.g12,.g1,.tool-grid { grid-template-columns:1fr; }
+  .kpi-strip.ks4,.kpi-strip.ks5,.kpi-strip.ks3 { grid-template-columns:1fr 1fr; }
+  .site-footer { flex-direction:column; gap:2rem; padding:2rem; }
+}
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-name">Venkata <span>Madhu</span> Puli</div>
+  <nav class="header-nav">
+    <a href="#dash1">Global E-commerce</a>
+    <a href="#dash2">Amazon Global</a>
+    <a href="#dash3">Consumer Behaviour</a>
+    <a href="#dash4" style="color:var(--warm);">↓ Violation Reduction</a>
+  </nav>
+  <div class="header-tag">Data Analysis Portfolio · 2025</div>
+</header>
+
+<div class="hero">
+  <h1 class="hero-h1">Global E-commerce &amp;<br><em>Amazon Marketplace</em><br>Analysis Suite</h1>
+  <p class="hero-sub">Four data-driven analyses — global market trends, Amazon's worldwide operation, consumer behaviour, and a measurable account health intervention that reduced seller violations by 35%.</p>
+  <div class="hero-chips">
+    <span class="chip hi">Statista / eMarketer</span>
+    <span class="chip hi">Amazon Annual Reports</span>
+    <span class="chip hi">Baymard Institute</span>
+    <span class="chip">World Bank / IMF</span>
+    <span class="chip">Marketplace Pulse</span>
+    <span class="chip">Mordor Intelligence</span>
+    <span class="chip">UNCTAD</span>
+    <span class="chip gold">Amazon Seller Central</span>
+    <span class="chip gold">Microsoft Excel · Power Query</span>
+  </div>
+  <div class="hero-jump">
+    <a href="#dash1" class="jump-btn solid"><span class="jn">01</span> Global E-commerce</a>
+    <a href="#dash2" class="jump-btn outline"><span class="jn">02</span> Amazon Global</a>
+    <a href="#dash3" class="jump-btn outline"><span class="jn">03</span> Consumer Behaviour</a>
+    <a href="#dash4" class="jump-btn solid-gold"><span class="jn dark">04</span> Violation Reduction</a>
+  </div>
+</div>
+
+<hr class="page-div thin" style="margin-top:0;">
+
+<!-- ── DASHBOARD 1: GLOBAL E-COMMERCE ── -->
+<div id="dash1">
+<section class="section">
+  <div class="section-header">
+    <div class="sh-left">
+      <div class="sec-num">Analysis 01</div>
+      <h2 class="sec-title">Global E-commerce<br><em>Market 2019–2028</em></h2>
+      <div class="sec-meta">Statista · eMarketer · UNCTAD<br>Mordor Intelligence · World Bank · IMF</div>
+    </div>
+    <div class="sh-right">
+      <p class="sec-desc">Global e-commerce reached $6.3 trillion in retail sales in 2024 — accounting for 20.1% of all retail worldwide. Asia-Pacific dominates with 59% of global online sales, driven by China's $3.3tn market. This analysis maps the full global trajectory, regional breakdown, category performance, and the mobile-first shift reshaping commerce on every continent.</p>
+    </div>
+  </div>
+
+  <div class="kpi-strip ks4">
+    <div class="kpi-box"><div class="kb-label">Global E-commerce Sales 2024</div><div class="kb-val warm">$6.3tn</div><div class="kb-change up">↑ +8.4% vs 2023 · Statista / eMarketer</div></div>
+    <div class="kpi-box"><div class="kb-label">Share of Total Global Retail</div><div class="kb-val acc3">20.1%</div><div class="kb-change up">↑ Up from 13.6% in 2019 · eMarketer</div></div>
+    <div class="kpi-box"><div class="kb-label">Global E-commerce Users 2024</div><div class="kb-val acc2">2.77bn</div><div class="kb-change up">↑ 33% of world population shops online</div></div>
+    <div class="kpi-box"><div class="kb-label">Forecast 2028</div><div class="kb-val acc3">$8.0tn</div><div class="kb-change up">↑ +27% from 2024 · Mordor Intelligence</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">Global E-commerce Sales ($tn) · 2019–2028 Forecast</div><canvas id="d1_sales" height="230"></canvas><div class="dash-src">Source: Statista · eMarketer Global E-commerce Forecast 2024 · Mordor Intelligence</div></div>
+    <div class="dash"><div class="dash-title">E-commerce as % of Total Global Retail · 2019–2028</div><canvas id="d1_share" height="230"></canvas><div class="dash-src">Source: eMarketer Global Retail E-commerce Share · UNCTAD 2024</div></div>
+  </div>
+
+  <div class="g3" style="margin-bottom:2px;">
+    <div class="dash-light"><div class="dash-title-dark">E-commerce Sales by Region 2024 ($bn)</div><canvas id="d1_cat" height="230"></canvas><div class="dash-src-dark">Source: eMarketer · Statista Regional Breakdown 2024</div></div>
+    <div class="dash-light"><div class="dash-title-dark">Top 10 E-commerce Markets by Sales ($bn) · 2024</div><canvas id="d1_pen" height="230"></canvas><div class="dash-src-dark">Source: Statista · eMarketer · Euromonitor 2024</div></div>
+    <div class="dash-light"><div class="dash-title-dark">Regional E-commerce Growth (% YoY) · 2022–2024</div><canvas id="d1_growth" height="230"></canvas><div class="dash-src-dark">Source: eMarketer · UNCTAD · Statista 2024</div></div>
+  </div>
+
+  <div class="dash-light g1" style="margin-bottom:2px;padding:0;">
+    <div style="padding:1.5rem 2rem 0.5rem;"><div class="dash-title-dark">Global E-commerce by Category — Market Size &amp; Growth 2024</div></div>
+    <table class="data-table">
+      <thead><tr><th>Category</th><th>Global Sales 2024</th><th>YoY Growth</th><th>Online Penetration</th><th>Penetration Bar</th><th>Signal</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Fashion &amp; Apparel</strong></td><td>$760bn</td><td>+9.2%</td><td>~38%</td><td><div class="pbar"><div class="pfill" style="width:38%;background:#2E6BA8;"></div></div></td><td><span class="badge bb">↑ Largest category globally</span></td></tr>
+        <tr><td><strong>Electronics &amp; Media</strong></td><td>$740bn</td><td>+6.1%</td><td>~44%</td><td><div class="pbar"><div class="pfill" style="width:44%;background:#2E6BA8;"></div></div></td><td><span class="badge bo">→ Near saturation in mature markets</span></td></tr>
+        <tr><td>Food &amp; Grocery</td><td>$620bn</td><td>+14.8%</td><td>~12%</td><td><div class="pbar"><div class="pfill" style="width:12%;background:#2A7A5A;"></div></div></td><td><span class="badge bg">↑ Fastest growing · hugely underpenetrated</span></td></tr>
+        <tr><td>Health &amp; Beauty</td><td>$480bn</td><td>+11.4%</td><td>~22%</td><td><div class="pbar"><div class="pfill" style="width:22%;background:#2A7A5A;"></div></div></td><td><span class="badge bg">↑ High growth · low penetration</span></td></tr>
+        <tr><td>Furniture &amp; Home</td><td>$320bn</td><td>+8.7%</td><td>~18%</td><td><div class="pbar"><div class="pfill" style="width:18%;background:#2E6BA8;"></div></div></td><td><span class="badge bb">↑ Growing steadily</span></td></tr>
+        <tr><td>Toys, Hobby &amp; DIY</td><td>$280bn</td><td>+5.3%</td><td>~30%</td><td><div class="pbar"><div class="pfill" style="width:30%;background:#2E6BA8;"></div></div></td><td><span class="badge bb">→ Mature in key markets</span></td></tr>
+        <tr><td>Travel &amp; Experiences</td><td>$190bn</td><td>-2.1%</td><td>~55%</td><td><div class="pbar"><div class="pfill" style="width:55%;background:#C94B1E;"></div></div></td><td><span class="badge br">↓ Post-COVID normalisation</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box green" style="margin-bottom:2px;">
+    <div class="ib-label green">📊 Key Finding</div>
+    <p class="ib-body">Global e-commerce is on course to hit <strong>$8 trillion by 2028</strong>, but the growth is not evenly distributed. Asia-Pacific — led by China ($3.3tn), Japan ($0.21tn), and South Korea ($0.18tn) — accounts for 59% of global online sales. Meanwhile, <strong>Food &amp; Grocery at just 12% online penetration despite $620bn in sales</strong> is the single largest untapped category globally. Markets that solve the last-mile logistics challenge in grocery will define the next decade of e-commerce growth.</p>
+  </div>
+
+  <div class="vv-box">
+    <div class="vv-header"><div class="vv-icon">V</div><div><div class="vv-name">Venkata Madhu Puli</div><div class="vv-role">MSc International Management · Teesside University · E-commerce focus</div></div></div>
+    <div class="vv-label">My Perspective — Global Context for Local Work</div>
+    <p class="vv-text">"Working on Amazon Account Health, it was easy to think of what I was doing as a UK problem. But the global picture changes that framing completely. The same categories driving compliance complexity in the UK — Health &amp; Beauty, Electronics — are the fastest-growing and highest-risk categories in every major market. <strong>The 35% violation reduction I achieved in the UK is a microcosm of the same challenge Amazon faces across $6.3 trillion of global e-commerce.</strong> What works at local level — pattern recognition, proactive outreach, data-driven prioritisation — is the same approach that scales."</p>
+  </div>
+</section>
+</div>
+
+<hr class="page-div thin">
+
+<!-- ── DASHBOARD 2: GLOBAL AMAZON ── -->
+<div id="dash2">
+<section class="section">
+  <div class="section-header">
+    <div class="sh-left">
+      <div class="sec-num">Analysis 02</div>
+      <h2 class="sec-title">Amazon Global<br><em>Marketplace 2024</em></h2>
+      <div class="sec-meta">Amazon Annual Report 2024<br>Marketplace Pulse · Statista · eMarketer · AMZScout</div>
+    </div>
+    <div class="sh-right">
+      <p class="sec-desc">Amazon generated $638bn in total net sales in 2024, operating across 21 marketplaces worldwide. Third-party sellers now account for 61% of all units sold globally. This analysis maps Amazon's total revenue footprint, geographic breakdown, seller economics across regions, FBA adoption trends, and category-level compliance risk profiles across the global operation.</p>
+    </div>
+  </div>
+
+  <div class="kpi-strip ks5">
+    <div class="kpi-box dark"><div class="kb-label lt">Amazon Total Net Sales 2024</div><div class="kb-val warm">$638bn</div><div class="kb-change lt">↑ From $386bn in 2020</div></div>
+    <div class="kpi-box dark"><div class="kb-label lt">Global 3P Share of Units</div><div class="kb-val acc3">61%</div><div class="kb-change lt">↑ Q1 2024 · Marketplace Pulse</div></div>
+    <div class="kpi-box dark"><div class="kb-label lt">Active Global Marketplaces</div><div class="kb-val lt">21</div><div class="kb-change lt">Across NA, EU, APAC, MENA</div></div>
+    <div class="kpi-box dark"><div class="kb-label lt">Global FBA Adoption</div><div class="kb-val acc3">82%</div><div class="kb-change lt">↑ From ~70% in 2021</div></div>
+    <div class="kpi-box dark"><div class="kb-label lt">AWS Revenue 2024</div><div class="kb-val acc2">$107bn</div><div class="kb-change lt">↑ +17% YoY · subsidises marketplace</div></div>
+  </div>
+
+  <!-- Total revenue breakdown -->
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">Amazon Total Net Sales by Segment ($bn) · 2024</div><canvas id="d2_segments" height="230"></canvas><div class="dash-src">Source: Amazon Annual Report 2024</div></div>
+    <div class="dash"><div class="dash-title">Amazon Net Sales Growth ($bn) · 2019–2024</div><canvas id="d2_totalsales" height="230"></canvas><div class="dash-src">Source: Amazon Annual Reports 2019–2024 · Statista Feb 2025</div></div>
+  </div>
+
+  <!-- Geographic breakdown -->
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash-light"><div class="dash-title-dark">Amazon Net Sales by Geography ($bn) · 2024</div><canvas id="d2_geo" height="230"></canvas><div class="dash-src-dark">Source: Amazon Annual Report 2024 · Statista · World Population Review 2025</div></div>
+    <div class="dash-light"><div class="dash-title-dark">Top Amazon Marketplaces — Net Sales 2024 ($bn)</div><canvas id="d2_markets" height="230"></canvas><div class="dash-src-dark">Source: Amazon Annual Report 2024 · Marketplace Pulse · Statista Feb 2025</div></div>
+  </div>
+
+  <!-- Seller economics -->
+  <div class="g21" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">3P Sellers vs Amazon 1P — Share of Global Units (%) · 2019–2024</div><canvas id="d2_split" height="210"></canvas><div class="dash-src">Source: Marketplace Pulse 2024 · AMZScout seller statistics</div></div>
+    <div class="dash"><div class="dash-title">Global Fulfilment Method Split · 2024</div><canvas id="d2_fba" height="210"></canvas><div class="dash-src">Source: AMZScout 2025</div></div>
+  </div>
+
+  <!-- Revenue distribution + YoY growth by region -->
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash-light"><div class="dash-title-dark">Global Seller Monthly Revenue Distribution — 2024</div><canvas id="d2_revenue" height="210"></canvas><div class="dash-src-dark">Source: AMZScout / Jungle Scout seller statistics 2024–2025</div></div>
+    <div class="dash-light"><div class="dash-title-dark">Amazon Net Sales YoY Growth by Region (%) · 2022–2024</div><canvas id="d2_regional_growth" height="210"></canvas><div class="dash-src-dark">Source: Amazon Annual Reports 2022–2024</div></div>
+  </div>
+
+  <!-- Risk radar -->
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">Policy &amp; Compliance Risk by Category — Global Radar</div><canvas id="d2_risk" height="230"></canvas><div class="dash-src">Source: Amazon Seller Central global policy framework · AHS operational context</div></div>
+    <div class="dash"><div class="dash-title">Active Sellers by Marketplace — Global Distribution 2024</div><canvas id="d2_sellers" height="230"></canvas><div class="dash-src">Source: Marketplace Pulse 2024 · Statista</div></div>
+  </div>
+
+  <!-- Global category table -->
+  <div class="dash-light g1" style="margin-bottom:2px;padding:0;">
+    <div style="padding:1.5rem 2rem 0.5rem;"><div class="dash-title-dark">Amazon Global Category — Performance &amp; Compliance Profile 2024</div></div>
+    <table class="data-table">
+      <thead><tr><th>Category</th><th>Global GMV Est.</th><th>3P Seller Share</th><th>FBA Rate</th><th>Policy Risk</th><th>Risk Bar</th><th>AHS Relevance</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Electronics &amp; Media</strong></td><td>~$185bn</td><td>54%</td><td>78%</td><td><span class="badge br">High</span></td><td><div class="pbar"><div class="pfill" style="width:80%;background:#C94B1E;"></div></div></td><td>IP infringement &amp; counterfeit — #1 AHS category globally</td></tr>
+        <tr><td><strong>Health &amp; Beauty</strong></td><td>~$95bn</td><td>72%</td><td>88%</td><td><span class="badge br">High</span></td><td><div class="pbar"><div class="pfill" style="width:73%;background:#C94B1E;"></div></div></td><td>Regulatory complexity varies by region — fastest growing risk</td></tr>
+        <tr><td>Fashion &amp; Apparel</td><td>~$80bn</td><td>68%</td><td>84%</td><td><span class="badge bo">Medium</span></td><td><div class="pbar"><div class="pfill" style="width:55%;background:#E8A838;"></div></div></td><td>High volume globally — listing compliance key driver</td></tr>
+        <tr><td>Home &amp; Garden</td><td>~$65bn</td><td>65%</td><td>79%</td><td><span class="badge bo">Medium</span></td><td><div class="pbar"><div class="pfill" style="width:48%;background:#E8A838;"></div></div></td><td>Product safety standards — regional CE/UKCA/FCC differences</td></tr>
+        <tr><td>Food &amp; Grocery</td><td>~$40bn</td><td>41%</td><td>62%</td><td><span class="badge bg">Lower</span></td><td><div class="pbar"><div class="pfill" style="width:28%;background:#2A7A5A;"></div></div></td><td>Emerging globally — US/EU regulatory divergence key risk</td></tr>
+        <tr><td>Toys &amp; Games</td><td>~$35bn</td><td>58%</td><td>81%</td><td><span class="badge bo">Medium</span></td><td><div class="pbar"><div class="pfill" style="width:43%;background:#E8A838;"></div></div></td><td>Seasonal spikes — CE, UKCA, CPSC marking varies by market</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box blue" style="margin-bottom:2px;">
+    <div class="ib-label blue">📊 Key Finding</div>
+    <p class="ib-body">Amazon's $638bn global operation is now majority-powered by third-party sellers at 61% of units. The USA alone accounts for $501bn — 79% of total revenue — while international markets (EU, APAC, MENA) represent a massive but underserved growth frontier. <strong>Every percentage point improvement in global seller compliance directly protects the GMV of 61% of Amazon's product catalogue.</strong> The Account Health function is not back-office administration — it is the infrastructure upon which Amazon's third-party marketplace runs.</p>
+  </div>
+
+  <div class="vv-box">
+    <div class="vv-header"><div class="vv-icon">V</div><div><div class="vv-name">Venkata Madhu Puli</div><div class="vv-role">Account Health Specialist · Amazon, Hyderabad (Mar 2020–Jun 2021)</div></div></div>
+    <div class="vv-label">My Perspective — The Scale I Was Part Of</div>
+    <p class="vv-text">"I was managing Account Health cases in Hyderabad every day, processing seller accounts across US, EU, UK and India — but I had no real sense of how the operation connected to Amazon's global machine. Looking at the full picture now — $638bn in total revenue, 21 marketplaces, 61% of units from third-party sellers — what this data shows is that the compliance problem I was working on isn't local. <strong>The same IP infringement, listing accuracy, and product safety issues I handled in Hyderabad are the top risk categories in every single Amazon market globally.</strong> The playbook I was executing is the same one Amazon runs across every timezone."</p>
+  </div>
+</section>
+</div>
+
+<hr class="page-div thin">
+
+<!-- ── DASHBOARD 3 ── -->
+<div id="dash3">
+<section class="section">
+  <div class="section-header">
+    <div class="sh-left">
+      <div class="sec-num">Analysis 03</div>
+      <h2 class="sec-title">UK Consumer<br><em>Behaviour 2024–25</em></h2>
+      <div class="sec-meta">Baymard Institute (50 studies)<br>eMarketer · Mordor Intelligence · ONS</div>
+    </div>
+    <div class="sh-right">
+      <p class="sec-desc">This analysis extends MSc thesis research on psychological purchase factors, applying current published data to understand conversion barriers, device shift dynamics, and demographic purchasing patterns. The headline number — 70.2% cart abandonment — points to an £89bn gap between intent and action in UK e-commerce.</p>
+    </div>
+  </div>
+
+  <div class="kpi-strip ks4">
+    <div class="kpi-box"><div class="kb-label">UK E-commerce Users 2024</div><div class="kb-val warm">50m</div><div class="kb-change">Non-digital buyers now a minority · Statista</div></div>
+    <div class="kpi-box"><div class="kb-label">Cart Abandonment Rate</div><div class="kb-val acc">70.2%</div><div class="kb-change dn">↑ From 69.9% in 2023 · Baymard (50 studies)</div></div>
+    <div class="kpi-box"><div class="kb-label">Mobile Share of Online Spend</div><div class="kb-val acc3">54%</div><div class="kb-change up">↑ Growing at +10.19% CAGR · Mordor</div></div>
+    <div class="kpi-box"><div class="kb-label">Digital Wallet Adoption 2024</div><div class="kb-val acc2">57%</div><div class="kb-change up">↑ From 42% in 2023 · Mordor Intelligence</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash-light"><div class="dash-title-dark">Device Sales: Smartphone vs Desktop (£bn) · 2022–2028 Forecast</div><canvas id="d3_device" height="230"></canvas><div class="dash-src-dark">Source: eMarketer UK Ecommerce Forecast 2024 · Mordor Intelligence</div></div>
+    <div class="dash-light"><div class="dash-title-dark">Cart Abandonment Rate by Device — UK 2024 (%)</div><canvas id="d3_abandon" height="230"></canvas><div class="dash-src-dark">Source: Baymard Institute · MobiLoud · Wiser Review 2024</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">Top Reasons for Cart Abandonment — UK Consumers 2024</div><canvas id="d3_reasons" height="250"></canvas><div class="dash-src">Source: OptinMonster · Baymard Institute · SmartRoutes · Wiser Review 2024</div></div>
+    <div class="dash"><div class="dash-title">UK Digital Buyers by Age — 2024 vs 2028 Forecast (millions)</div><canvas id="d3_age" height="250"></canvas><div class="dash-src">Source: eMarketer UK Ecommerce Forecast 2024</div></div>
+  </div>
+
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash-light"><div class="dash-title-dark">Mobile Abandonment Rate vs Mobile Sales Share · 2021–2025</div><canvas id="d3_mobile" height="210"></canvas><div class="dash-src-dark">Source: Mordor Intelligence · Baymard Institute · MobiLoud</div></div>
+    <div class="dash-light"><div class="dash-title-dark">Return Rate by Category — UK Online Retail 2024 (%)</div><canvas id="d3_returns" height="210"></canvas><div class="dash-src-dark">Source: Red Stag Fulfillment · Wiser Review · SmartRoutes 2024</div></div>
+  </div>
+
+  <div class="dash-light g1" style="margin-bottom:2px;padding:0;">
+    <div style="padding:1.5rem 2rem 0.5rem;"><div class="dash-title-dark">Psychological Purchase Drivers — UK Online Shoppers 2024</div></div>
+    <table class="data-table">
+      <thead><tr><th>Purchase Driver</th><th>% Influenced</th><th>Influence Bar</th><th>Platform Implication</th><th>Amazon Relevance?</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free / Low Shipping Costs</strong></td><td>79%</td><td><div class="pbar"><div class="pfill" style="width:79%;background:#2A7A5A;"></div></div></td><td>Prime shipping drives purchase decision</td><td><span class="badge bg">High — FBA critical</span></td></tr>
+        <tr><td><strong>Returns Policy Clarity</strong></td><td>77%</td><td><div class="pbar"><div class="pfill" style="width:77%;background:#2A7A5A;"></div></div></td><td>77% check returns policy before buying</td><td><span class="badge bg">High — listing compliance</span></td></tr>
+        <tr><td>Customer Reviews &amp; Ratings</td><td>74%</td><td><div class="pbar"><div class="pfill" style="width:74%;background:#2E6BA8;"></div></div></td><td>Social proof is primary trust signal</td><td><span class="badge bg">High — AHS seller health</span></td></tr>
+        <tr><td>Price Competitiveness</td><td>68%</td><td><div class="pbar"><div class="pfill" style="width:68%;background:#2E6BA8;"></div></div></td><td>Dynamic pricing algorithms essential</td><td><span class="badge bg">High — listing strategy</span></td></tr>
+        <tr><td>Social Media / Influencer</td><td>55%</td><td><div class="pbar"><div class="pfill" style="width:55%;background:#E8A838;"></div></div></td><td>Amazon affiliate/influencer programmes</td><td><span class="badge bo">Medium</span></td></tr>
+        <tr><td>Product Image Quality</td><td>48%</td><td><div class="pbar"><div class="pfill" style="width:48%;background:#E8A838;"></div></div></td><td>Listing image compliance &amp; quality</td><td><span class="badge bg">High — listing optimisation</span></td></tr>
+        <tr><td>Urgency / Scarcity Signals</td><td>34%</td><td><div class="pbar"><div class="pfill" style="width:34%;background:#C94B1E;"></div></div></td><td>Limited stock / countdown timers</td><td><span class="badge bo">Medium</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="insight-box" style="margin-bottom:2px;">
+    <div class="ib-label">📊 Key Finding</div>
+    <p class="ib-body">At 70.2% cart abandonment against £127.4bn in completed UK online sales, an estimated <strong>£89bn of intended purchases are lost annually before checkout</strong>. The primary cause — unexpected shipping costs, cited by 90% of abandoners — directly explains why <strong>Amazon Prime's free shipping proposition has been so defensively powerful</strong>.</p>
+  </div>
+
+  <div class="vv-box">
+    <div class="vv-header"><div class="vv-icon">V</div><div><div class="vv-name">Venkata Madhu Puli</div><div class="vv-role">MSc Thesis: MSc Thesis: Psychological Factors on Consumer Online Behaviour · Teesside University</div></div></div>
+    <div class="vv-label">My Perspective — Connecting Research to the Real World</div>
+    <p class="vv-text">"My MSc thesis explored psychological factors behind online purchase decisions — things like trust signals, social proof, and perceived risk. At the time it felt quite theoretical. But looking at the Baymard data now, the fact that <strong>77% of UK shoppers check a returns policy before buying</strong> explains why listing accuracy and policy compliance at Amazon are not back-office admin tasks — they are <strong>directly conversion-driving activities</strong>."</p>
+  </div>
+</section>
+</div>
+
+<hr class="page-div gold">
+
+<!-- ── DASHBOARD 4: VIOLATION REDUCTION ── -->
+<div id="dash4" style="background:linear-gradient(180deg,#0A0E14 0%,#0F1319 100%);">
+<section class="section">
+  <div class="section-header">
+    <div class="sh-left">
+      <div class="sec-num gold">Case Study 04</div>
+      <h2 class="sec-title" style="color:#fff;">Seller Violation<br><em class="gold">Reduction — 35%</em></h2>
+      <div class="sec-meta">Amazon Seller Central · Case Management System<br>Account Health Dashboard · Policy Enforcement Logs</div>
+    </div>
+    <div class="sh-right">
+      <p class="sec-desc" style="color:rgba(255,255,255,0.5);">During my tenure as Account Health Specialist at Amazon, Hyderabad, India (Mar 2020–Jun 2021), I identified a pattern in repeat violation types and deployed a structured intervention — combining data analysis, proactive seller outreach, and targeted education — that reduced seller violation rates by 35% across my assigned seller cohort over a 6-month period. This dashboard documents the methodology, tools, and measurable outcomes.</p>
+    </div>
+  </div>
+
+  <!-- Top KPIs -->
+  <div class="kpi-strip ks4" style="margin-bottom:2px;">
+    <div class="kpi-box gold"><div class="kb-label gd">Violation Rate Reduction</div><div class="kb-val warm">−35%</div><div class="kb-change gd">↓ Across assigned seller cohort · 6 months</div></div>
+    <div class="kpi-box gold"><div class="kb-label gd">Repeat Violation Drop</div><div class="kb-val warm">−52%</div><div class="kb-change gd">↓ Among sellers contacted proactively</div></div>
+    <div class="kpi-box gold"><div class="kb-label gd">Cases Resolved Per Week</div><div class="kb-val warm">40+</div><div class="kb-change gd">↑ Above team average of 28</div></div>
+    <div class="kpi-box gold"><div class="kb-label gd">Avg. Case Resolution Time</div><div class="kb-val warm">1.8 days</div><div class="kb-change gd">↓ vs 3.2 day team average</div></div>
+  </div>
+
+  <!-- Violation trend chart + violation type breakdown -->
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">Seller Violation Rate — Monthly Trend · Jan–Jun 2021</div><canvas id="d4_trend" height="230"></canvas><div class="dash-src">Source: Amazon Account Health Dashboard · Case Management System · Internal tracking</div></div>
+    <div class="dash"><div class="dash-title">Violation Type Breakdown — Before Intervention (%)</div><canvas id="d4_types" height="230"></canvas><div class="dash-src">Source: Amazon Case Management System · Policy Enforcement Logs · Jan 2021</div></div>
+  </div>
+
+  <!-- Tool cards -->
+  <div class="tool-grid" style="margin-bottom:2px;">
+    <div class="tool-card">
+      <div class="tc-icon">📊</div>
+      <div class="tc-name">Amazon Seller Central</div>
+      <div class="tc-desc">Primary interface for reviewing seller account health scores, violation history, and active policy breach notifications. Used daily to triage open cases by severity, recurrence count, and suspension risk level.</div>
+      <div class="tc-metric">~40</div>
+      <div class="tc-metric-label">Cases triaged per week via Seller Central</div>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">🗂️</div>
+      <div class="tc-name">Amazon Internal Case Tool (ACT)</div>
+      <div class="tc-desc">Amazon's proprietary case management platform used by AHS specialists to log, track, escalate and close enforcement cases. I applied repeat-violation filters (2+ breaches / 90 days) to surface the highest-risk seller cohort.</div>
+      <div class="tc-metric">2+ / 90d</div>
+      <div class="tc-metric-label">Repeat violation filter to identify at-risk sellers</div>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">📋</div>
+      <div class="tc-name">Microsoft Excel + Power Query</div>
+      <div class="tc-desc">Used to extract, clean, and analyse violation log exports from ACT. Built a pivot-based tracker to group violations by category, seller type, and recurrence frequency — revealing that listing accuracy and IP together drove 71% of repeats.</div>
+      <div class="tc-metric">71%</div>
+      <div class="tc-metric-label">Of repeats traced to 2 categories via Excel analysis</div>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">📧</div>
+      <div class="tc-name">Amazon Buyer-Seller Messaging</div>
+      <div class="tc-desc">Amazon's internal communication channel used for proactive pre-escalation seller outreach. Drafted three category-specific guidance templates (listing accuracy, IP documentation, product safety) and deployed to 47 high-risk sellers before suspension review triggered.</div>
+      <div class="tc-metric">−52%</div>
+      <div class="tc-metric-label">Repeat violations in proactively contacted sellers</div>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">📈</div>
+      <div class="tc-name">Account Health Dashboard (AHD)</div>
+      <div class="tc-desc">Amazon's internal real-time monitoring dashboard showing seller health scores, defect rates, and policy violation trends at individual and cohort level. Used weekly to track before/after snapshots and confirm improvement trajectory across the 6-month window.</div>
+      <div class="tc-metric">6 months</div>
+      <div class="tc-metric-label">Sustained improvement tracked via AHD snapshots</div>
+    </div>
+    <div class="tool-card">
+      <div class="tc-icon">🔍</div>
+      <div class="tc-name">Amazon Brand Registry &amp; IP Alert</div>
+      <div class="tc-desc">Used to cross-reference suspected IP violations against registered brand data. IP Alert tool flagged potential counterfeit listings automatically — I used these signals to prioritise cases and verify authenticity documentation requirements before escalating.</div>
+      <div class="tc-metric">28%</div>
+      <div class="tc-metric-label">Of all violations were IP-related — verified via Brand Registry</div>
+    </div>
+  </div>
+
+  <!-- Before / after comparison + resolution time chart -->
+  <div class="g2" style="margin-bottom:2px;">
+    <div class="dash"><div class="dash-title">Before vs After — Key Metrics Comparison</div><canvas id="d4_compare" height="230"></canvas><div class="dash-src">Source: Amazon Account Health Dashboard · Internal performance tracking · Q1–Q2 2021</div></div>
+    <div class="dash"><div class="dash-title">Case Resolution Time — My Performance vs Team Avg (days)</div><canvas id="d4_resolution" height="230"></canvas><div class="dash-src">Source: Amazon Case Tool (ACT) throughput logs · Account Health Dashboard weekly reports · 2021</div></div>
+  </div>
+
+  <!-- Intervention timeline -->
+  <div class="g12" style="margin-bottom:2px;">
+    <div class="timeline">
+      <div class="tl-title">Intervention Timeline — January to June 2021</div>
+      <div class="tl-items">
+        <div class="tl-item">
+          <div class="tl-dot red"></div>
+          <div class="tl-month red">Jan 2021 — Baseline</div>
+          <div class="tl-action">Violation rate audit across assigned cohort</div>
+          <div class="tl-detail">Used Case Management System to pull 90-day violation history. Identified that 34% of sellers had repeat violations. Listing accuracy (43%) and IP/authenticity (28%) dominated.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-month">Feb 2021 — Root Cause Analysis</div>
+          <div class="tl-action">Mapped top violation patterns by seller type and category</div>
+          <div class="tl-detail">Cross-referenced Policy Enforcement Logs with seller category data. Health &amp; Beauty and Electronics sellers were responsible for 58% of all violations despite being 31% of the cohort.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-month">Mar 2021 — Intervention Design</div>
+          <div class="tl-action">Drafted targeted education templates for top 3 violation types</div>
+          <div class="tl-detail">Created plain-English guidance documents for: (1) Listing accuracy requirements, (2) IP/authenticity documentation, (3) Product safety labelling. Templates reviewed and approved by team lead.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot"></div>
+          <div class="tl-month">Apr 2021 — Proactive Outreach</div>
+          <div class="tl-action">Contacted at-risk sellers before violations escalated to suspension</div>
+          <div class="tl-detail">Sent guidance to 47 sellers identified as high-risk using the 2+ violation / 90-day filter. Outreach made via Amazon's internal messaging system, tracking response and subsequent behaviour.</div>
+        </div>
+        <div class="tl-item">
+          <div class="tl-dot green"></div>
+          <div class="tl-month green">May–Jun 2021 — Results</div>
+          <div class="tl-action">35% overall violation reduction · 52% repeat violation reduction</div>
+          <div class="tl-detail">Account Health Dashboard weekly snapshots confirmed sustained improvement. Proactively-contacted sellers showed 52% fewer repeat violations vs 18% for non-contacted control group. Resolution time fell from 3.2 to 1.8 days average, tracked via Amazon Case Tool throughput logs.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div class="dash"><div class="dash-title">Violation Rate by Category — Before &amp; After Intervention (%)</div><canvas id="d4_category" height="210"></canvas><div class="dash-src">Source: Policy Enforcement Logs · Account Health Dashboard · Q1 vs Q2 2021</div></div>
+      <div class="insight-box gold" style="margin-top:0;">
+        <div class="ib-label gold">⚡ Impact Summary</div>
+        <p class="ib-body lt">Proactive seller education — deployed before escalation, not after — was <strong>2.9× more effective</strong> than reactive case resolution at reducing repeat violations. The 47 sellers contacted proactively generated <strong>52% fewer repeat cases</strong> over the following 8 weeks, versus 18% reduction in the non-contacted group. This is the core insight: <strong>Account Health value is created upstream of the violation, not in processing it.</strong></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary table -->
+  <div style="background:var(--panel2);padding:0;margin-bottom:2px;">
+    <div style="padding:1.5rem 2rem 0.5rem;"><div class="dash-title">Methodology — Real Tools Used &amp; Their Role in the 35% Reduction</div></div>
+    <table class="data-table dark">
+      <thead><tr><th>Tool</th><th>Type</th><th>How Used</th><th>Data / Output</th><th>Impact on Result</th></tr></thead>
+      <tbody>
+        <tr><td><strong style="color:#fff;">Amazon Seller Central</strong></td><td><span class="badge bw">Amazon Platform</span></td><td>Daily case triage — reviewed violation severity, account history, suspension risk</td><td>Violation type, recency, seller tier and category data</td><td><span class="badge bw">Foundation</span></td></tr>
+        <tr><td><strong style="color:#fff;">Amazon Case Tool (ACT)</strong></td><td><span class="badge bw">Amazon Internal</span></td><td>Applied 90-day repeat violation filters to segment seller cohort by risk level</td><td>Identified 47 high-risk sellers — the proactive outreach intervention group</td><td><span class="badge bw">Critical</span></td></tr>
+        <tr><td><strong style="color:#fff;">Microsoft Excel + Power Query</strong></td><td><span class="badge bb">Productivity / BI</span></td><td>Exported violation logs, built pivot tables to map violation type by category and frequency</td><td>Revealed listing accuracy + IP = 71% of repeats — focused intervention on highest-leverage areas</td><td><span class="badge bw">Critical</span></td></tr>
+        <tr><td><strong style="color:#fff;">Account Health Dashboard (AHD)</strong></td><td><span class="badge bw">Amazon Internal</span></td><td>Weekly cohort health score snapshots — tracked before/after across 6-month window</td><td>Confirmed 35% sustained improvement; identified categories where gains were holding</td><td><span class="badge bw">Measurement</span></td></tr>
+        <tr><td><strong style="color:#fff;">Amazon Buyer-Seller Messaging</strong></td><td><span class="badge bw">Amazon Platform</span></td><td>Proactive pre-escalation outreach — sent guidance templates before suspension triggered</td><td>52% repeat violation reduction in contacted group vs 18% in non-contacted control</td><td><span class="badge bw">Highest ROI</span></td></tr>
+        <tr><td><strong style="color:#fff;">Amazon Brand Registry / IP Alert</strong></td><td><span class="badge bw">Amazon Platform</span></td><td>Cross-referenced flagged listings against registered brand data; verified IP violation signals</td><td>Prioritised 28% of caseload accurately; guided authenticity documentation requirements</td><td><span class="badge bw">Precision</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="vv-box">
+    <div class="vv-header"><div class="vv-icon">V</div><div><div class="vv-name">Venkata Madhu Puli</div><div class="vv-role">Account Health Specialist · Amazon, Hyderabad · Mar 2020–Jun 2021</div></div></div>
+    <div class="vv-label">What I Learned — Data as a Prevention Tool</div>
+    <p class="vv-text">"The 35% reduction didn't come from working harder on individual cases. It came from stepping back and asking: <strong>why are the same sellers violating the same policies repeatedly?</strong> The Case Management System data made the answer obvious — Health &amp; Beauty and Electronics sellers were generating the bulk of violations because they were entering high-complexity regulatory environments without understanding what was required of them. Once I identified that pattern and started reaching out proactively — before a violation became a suspension — the recurrence rate dropped sharply. <strong>The lesson is that data is most valuable when it tells you where to intervene before something breaks, not just when it confirms that something already has.</strong>"</p>
+  </div>
+</section>
+</div>
+
+<footer class="site-footer">
+  <div>
+    <div class="sf-name">Venkata Madhu Puli</div>
+    <div class="sf-sub">E-commerce &amp; Data Professional · Leeds, UK · MSc International Management, Teesside University</div>
+  </div>
+  <div class="sf-links">
+    <a href="mailto:venkata@example.com" class="sf-link">venkata@example.com</a>
+    <a href="https://www.linkedin.com/in/venkata-madhu-puli-153681164/" class="sf-link" target="_blank">LinkedIn</a>
+    <a href="tel:07442797436" class="sf-link">+44 7442 797 436</a>
+  </div>
+</footer>
+
+<script>
+Chart.defaults.font.family = "'Inter', sans-serif";
+Chart.defaults.font.size = 11;
+
+const DG={color:'rgba(255,255,255,0.06)',drawTicks:false};
+const DT={color:'rgba(255,255,255,0.35)',padding:8};
+const LG={color:'rgba(0,0,0,0.06)',drawTicks:false};
+const LT={color:'#8A8A8A',padding:8};
+const GG={color:'rgba(232,168,56,0.06)',drawTicks:false};
+const GT={color:'rgba(232,168,56,0.4)',padding:8};
+const DL={labels:{color:'rgba(255,255,255,0.45)',boxWidth:11,padding:14}};
+const LL={labels:{color:'#6A6A6A',boxWidth:11,padding:14}};
+const GL={labels:{color:'rgba(232,168,56,0.5)',boxWidth:11,padding:14}};
+
+// ── DASHBOARD 1: GLOBAL E-COMMERCE ──
+new Chart('d1_sales',{type:'bar',data:{labels:['2019','2020','2021','2022','2023','2024','2025F','2026F','2027F','2028F'],datasets:[{data:[3.35,4.28,4.93,5.54,5.82,6.33,6.86,7.25,7.62,8.00],backgroundColor:['rgba(46,107,168,0.6)','rgba(46,107,168,0.65)','rgba(232,168,56,0.7)','rgba(46,107,168,0.65)','rgba(46,107,168,0.7)','rgba(42,122,90,0.85)','rgba(42,122,90,0.6)','rgba(42,122,90,0.5)','rgba(42,122,90,0.4)','rgba(42,122,90,0.35)'],borderWidth:0,label:'$tn'}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}tn`}}},scales:{x:{grid:DG,ticks:{...DT,font:{size:9}}},y:{grid:DG,ticks:{...DT,callback:v=>`$${v}tn`}}}}});
+
+new Chart('d1_share',{type:'line',data:{labels:['2019','2020','2021','2022','2023','2024','2025F','2026F','2027F','2028F'],datasets:[{label:'E-commerce % of Global Retail',data:[13.6,17.8,18.8,19.7,19.4,20.1,21.4,22.6,23.8,25.0],borderColor:'#E8A838',backgroundColor:'rgba(232,168,56,0.1)',tension:0.4,pointRadius:3,fill:true,borderWidth:2}]},options:{responsive:true,plugins:{legend:DL},scales:{x:{grid:DG,ticks:{...DT,font:{size:9}}},y:{grid:DG,ticks:{...DT,callback:v=>v+'%'},min:10,max:28}}}});
+
+new Chart('d1_cat',{type:'bar',data:{labels:['Asia-Pac','N. America','W. Europe','C&E Europe','L. America','MEA'],datasets:[{data:[3720,1340,680,155,130,95],backgroundColor:['rgba(201,75,30,0.85)','rgba(46,107,168,0.8)','rgba(42,122,90,0.8)','rgba(232,168,56,0.75)','rgba(130,80,180,0.75)','rgba(46,107,168,0.55)'],borderWidth:0,label:'$bn'}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}bn`}}},scales:{x:{grid:LG,ticks:{...LT,font:{size:9}}},y:{grid:LG,ticks:{...LT,callback:v=>`$${v}bn`}}}}});
+
+new Chart('d1_pen',{type:'bar',data:{labels:['China','USA','UK','Japan','S. Korea','Germany','India','France','Canada','Australia'],datasets:[{data:[3300,1120,128,210,180,93,70,62,58,42],backgroundColor:(ctx)=>ctx.dataIndex===0?'rgba(201,75,30,0.85)':ctx.dataIndex===1?'rgba(46,107,168,0.8)':ctx.dataIndex===2?'rgba(42,122,90,0.85)':'rgba(46,107,168,0.5)',borderWidth:0,label:'$bn'}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}bn`}}},scales:{x:{grid:LG,ticks:{...LT,callback:v=>`$${v}bn`}},y:{grid:LG,ticks:{...LT,font:{size:9}}}}}});
+
+new Chart('d1_growth',{type:'bar',data:{labels:['2022','2023','2024'],datasets:[{label:'Asia-Pacific',data:[9.1,8.5,9.2],backgroundColor:'rgba(201,75,30,0.75)',borderWidth:0},{label:'North America',data:[7.8,8.0,8.3],backgroundColor:'rgba(46,107,168,0.75)',borderWidth:0},{label:'W. Europe',data:[5.2,5.8,6.4],backgroundColor:'rgba(42,122,90,0.75)',borderWidth:0},{label:'Latin America',data:[18.5,22.4,19.8],backgroundColor:'rgba(232,168,56,0.8)',borderWidth:0}]},options:{responsive:true,plugins:{legend:LL},scales:{x:{grid:LG,ticks:LT},y:{grid:LG,ticks:{...LT,callback:v=>v+'%'}}}}});
+
+// ── DASHBOARD 2: GLOBAL ──
+new Chart('d2_segments',{type:'bar',data:{labels:['Online Stores','AWS','3P Seller Services','Advertising','Physical Stores','Subscriptions'],datasets:[{data:[260,107,159,56,21,44],backgroundColor:['rgba(46,107,168,0.8)','rgba(42,122,90,0.85)','rgba(232,168,56,0.8)','rgba(201,75,30,0.8)','rgba(130,80,180,0.75)','rgba(46,107,168,0.55)'],borderWidth:0,label:'$bn'}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}bn`}}},scales:{x:{grid:DG,ticks:{...DT,font:{size:9}}},y:{grid:DG,ticks:{...DT,callback:v=>`$${v}bn`}}}}});
+
+new Chart('d2_totalsales',{type:'line',data:{labels:['2019','2020','2021','2022','2023','2024'],datasets:[{label:'Total Net Sales ($bn)',data:[281,386,470,514,575,638],borderColor:'#E8A838',backgroundColor:'rgba(232,168,56,0.08)',tension:0.4,pointRadius:4,fill:true,borderWidth:2},{label:'International ($bn)',data:[74,104,127,118,131,137],borderColor:'#2E6BA8',backgroundColor:'rgba(46,107,168,0.06)',tension:0.4,pointRadius:4,fill:true,borderWidth:2}]},options:{responsive:true,plugins:{legend:DL},scales:{x:{grid:DG,ticks:DT},y:{grid:DG,ticks:{...DT,callback:v=>`$${v}bn`}}}}});
+
+new Chart('d2_geo',{type:'doughnut',data:{labels:['North America','International','AWS'],datasets:[{data:[388,137,107],backgroundColor:['rgba(46,107,168,0.8)','rgba(232,168,56,0.8)','rgba(42,122,90,0.85)'],borderWidth:0}]},options:{responsive:true,cutout:'58%',plugins:{legend:LL,tooltip:{callbacks:{label:c=>`$${c.raw}bn`}}}}});
+
+new Chart('d2_markets',{type:'bar',data:{labels:['USA','Germany','UK','Japan','Canada','France','Italy','Spain','Australia','India'],datasets:[{data:[501,41,37.9,31.4,26.7,20.5,13.1,9.4,7.8,6.5],backgroundColor:(ctx)=>ctx.dataIndex===0?'rgba(232,168,56,0.85)':ctx.dataIndex===2?'rgba(42,122,90,0.85)':'rgba(46,107,168,0.5)',borderWidth:0,label:'$bn'}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`$${c.raw}bn`}}},scales:{x:{grid:LG,ticks:{...LT,font:{size:9}}},y:{grid:LG,ticks:{...LT,callback:v=>`$${v}bn`}}}}});
+
+new Chart('d2_split',{type:'bar',data:{labels:['2019','2020','2021','2022','2023','2024'],datasets:[{label:'3P Sellers',data:[53,55,56,57,59,61],backgroundColor:'rgba(42,122,90,0.8)',borderWidth:0},{label:'Amazon 1P',data:[47,45,44,43,41,39],backgroundColor:'rgba(201,75,30,0.7)',borderWidth:0}]},options:{responsive:true,plugins:{legend:DL},scales:{x:{stacked:true,grid:DG,ticks:DT},y:{stacked:true,grid:DG,ticks:{...DT,callback:v=>v+'%'},max:100}}}});
+
+new Chart('d2_fba',{type:'doughnut',data:{labels:['FBA Only','FBM Only','Both FBA+FBM'],datasets:[{data:[64,20,16],backgroundColor:['rgba(42,122,90,0.85)','rgba(201,75,30,0.75)','rgba(232,168,56,0.8)'],borderWidth:0}]},options:{responsive:true,cutout:'62%',plugins:{legend:LL}}});
+
+new Chart('d2_revenue',{type:'bar',data:{labels:['<$1k/mo','$1–3k/mo','$3–7k/mo','$7–15k/mo','$15–25k/mo','>$25k/mo'],datasets:[{data:[22,31,20,15,8,4],backgroundColor:['rgba(201,75,30,0.8)','rgba(232,168,56,0.75)','rgba(232,168,56,0.85)','rgba(46,107,168,0.75)','rgba(42,122,90,0.75)','rgba(100,80,180,0.75)'],borderWidth:0,label:'% of sellers'}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:LG,ticks:{...LT,font:{size:9}}},y:{grid:LG,ticks:{...LT,callback:v=>v+'%'}}}}});
+
+new Chart('d2_regional_growth',{type:'bar',data:{labels:['2022','2023','2024'],datasets:[{label:'North America',data:[13,11,10],backgroundColor:'rgba(46,107,168,0.75)',borderWidth:0},{label:'International',data:[-8,11,11],backgroundColor:'rgba(232,168,56,0.75)',borderWidth:0},{label:'AWS',data:[29,13,17],backgroundColor:'rgba(42,122,90,0.85)',borderWidth:0}]},options:{responsive:true,plugins:{legend:LL},scales:{x:{grid:LG,ticks:LT},y:{grid:LG,ticks:{...LT,callback:v=>v+'%'}}}}});
+
+new Chart('d2_risk',{type:'radar',data:{labels:['IP/Counterfeit','Product Safety','Listing Compliance','Violation Rate','Account Suspension','Regulatory Complexity'],datasets:[{label:'Electronics',data:[88,72,65,74,70,60],borderColor:'#C94B1E',backgroundColor:'rgba(201,75,30,0.1)',pointBackgroundColor:'#C94B1E',borderWidth:2},{label:'Health & Beauty',data:[55,85,70,65,72,88],borderColor:'rgba(130,80,180,1)',backgroundColor:'rgba(130,80,180,0.1)',pointBackgroundColor:'rgba(130,80,180,1)',borderWidth:2},{label:'Fashion',data:[45,48,72,58,55,42],borderColor:'#2E6BA8',backgroundColor:'rgba(46,107,168,0.08)',pointBackgroundColor:'#2E6BA8',borderWidth:2}]},options:{responsive:true,scales:{r:{grid:{color:'rgba(255,255,255,0.07)'},ticks:{color:'rgba(255,255,255,0.3)',backdropColor:'transparent',stepSize:20},pointLabels:{color:'rgba(255,255,255,0.45)',font:{size:10}},min:0,max:100}},plugins:{legend:DL}}});
+
+new Chart('d2_sellers',{type:'bar',data:{labels:['USA','Japan','Germany','UK','France','Italy','Spain','Canada','Australia','India'],datasets:[{data:[1900,310,280,260,220,190,170,150,110,95],backgroundColor:(ctx)=>ctx.dataIndex===3?'rgba(42,122,90,0.85)':'rgba(46,107,168,0.5)',borderWidth:0,label:'Active sellers (k)'}]},options:{responsive:true,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>`${c.raw}k sellers`}}},scales:{x:{grid:DG,ticks:{...DT,font:{size:9}}},y:{grid:DG,ticks:{...DT,callback:v=>`${v}k`}}}}});
+
+// ── DASHBOARD 3 ──
+new Chart('d3_device',{type:'line',data:{labels:['2022','2023','2024','2025','2026','2027','2028'],datasets:[{label:'Smartphone (£bn)',data:[55,64,76,90,105,121,139],borderColor:'#2A7A5A',backgroundColor:'rgba(42,122,90,0.08)',tension:0.4,pointRadius:4,fill:true,borderWidth:2},{label:'Desktop (£bn)',data:[68,64,57,54,52,50,48],borderColor:'#2E6BA8',backgroundColor:'rgba(46,107,168,0.06)',tension:0.4,pointRadius:4,fill:true,borderWidth:2}]},options:{responsive:true,plugins:{legend:LL},scales:{x:{grid:LG,ticks:LT},y:{grid:LG,ticks:{...LT,callback:v=>`£${v}bn`}}}}});
+
+new Chart('d3_abandon',{type:'bar',data:{labels:['Mobile / Smartphone','Tablet','Desktop'],datasets:[{data:[85.65,80.74,67.2],backgroundColor:['rgba(201,75,30,0.8)','rgba(232,168,56,0.8)','rgba(42,122,90,0.75)'],borderWidth:0,label:'Abandonment %'}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:LG,ticks:LT},y:{grid:LG,ticks:{...LT,callback:v=>v+'%'},min:55,max:90}}}});
+
+new Chart('d3_reasons',{type:'bar',data:{labels:['Unexpected shipping','Returns policy not clear','Price comparison','Forced account creation','Long checkout','Payment security'],datasets:[{data:[90,77,44,37,28,25],backgroundColor:['rgba(201,75,30,0.85)','rgba(201,75,30,0.7)','rgba(232,168,56,0.8)','rgba(46,107,168,0.75)','rgba(46,107,168,0.6)','rgba(42,122,90,0.7)'],borderWidth:0,label:'%'}]},options:{indexAxis:'y',responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:DG,ticks:{...DT,callback:v=>v+'%'},max:100},y:{grid:DG,ticks:{...DT,font:{size:10}}}}}});
+
+new Chart('d3_age',{type:'bar',data:{labels:['18–24','25–34','35–44','45–54','55–64','65+'],datasets:[{label:'2024 (m)',data:[7.2,9.8,8.6,7.4,6.1,4.8],backgroundColor:'rgba(46,107,168,0.7)',borderWidth:0},{label:'2028 Forecast (m)',data:[7.9,10.2,9.0,7.8,6.8,5.8],backgroundColor:'rgba(42,122,90,0.7)',borderWidth:0}]},options:{responsive:true,plugins:{legend:DL},scales:{x:{grid:DG,ticks:DT},y:{grid:DG,ticks:DT}}}});
+
+new Chart('d3_mobile',{type:'line',data:{labels:['2021','2022','2023','2024','2025'],datasets:[{label:'Mobile Abandonment %',data:[87.2,86.8,86.1,85.65,84.9],borderColor:'#C94B1E',backgroundColor:'rgba(201,75,30,0.08)',tension:0.4,pointRadius:4,yAxisID:'y',fill:true,borderWidth:2},{label:'Mobile Sales Share %',data:[41,46,50,54,57],borderColor:'#2A7A5A',backgroundColor:'rgba(42,122,90,0.06)',tension:0.4,pointRadius:4,yAxisID:'y1',fill:true,borderWidth:2}]},options:{responsive:true,plugins:{legend:LL},scales:{x:{grid:LG,ticks:LT},y:{grid:LG,ticks:{...LT,callback:v=>v+'%'},min:82,max:90},y1:{position:'right',grid:{display:false},ticks:{...LT,callback:v=>v+'%'}}}}});
+
+new Chart('d3_returns',{type:'bar',data:{labels:['Apparel','Footwear','Electronics','Furniture','Beauty','Toys','Books','Food'],datasets:[{data:[35,28,18,12,10,8,6,3],backgroundColor:(ctx)=>ctx.raw>25?'rgba(201,75,30,0.8)':ctx.raw>14?'rgba(232,168,56,0.8)':'rgba(42,122,90,0.75)',borderWidth:0,label:'Return %'}]},options:{responsive:true,plugins:{legend:{display:false}},scales:{x:{grid:LG,ticks:LT},y:{grid:LG,ticks:{...LT,callback:v=>v+'%'}}}}});
+
+// ── DASHBOARD 4: VIOLATION REDUCTION ──
+new Chart('d4_trend',{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'Violation Rate (index)',data:[100,97,88,78,68,65],borderColor:'#C94B1E',backgroundColor:'rgba(201,75,30,0.08)',tension:0.4,pointRadius:5,fill:true,borderWidth:2},{label:'Team Average',data:[100,99,97,95,93,91],borderColor:'rgba(255,255,255,0.2)',borderDash:[5,4],pointRadius:3,borderWidth:1,fill:false}]},options:{responsive:true,plugins:{legend:DL,tooltip:{callbacks:{label:c=>`${c.dataset.label}: ${c.raw} (index)`}}},scales:{x:{grid:DG,ticks:DT},y:{grid:DG,ticks:{...DT,callback:v=>v+' idx'},min:55,max:105}}}});
+
+new Chart('d4_types',{type:'doughnut',data:{labels:['Listing Accuracy','IP / Authenticity','Product Safety','Pricing Policy','Shipping / Fulfillment','Other'],datasets:[{data:[43,28,14,8,4,3],backgroundColor:['rgba(201,75,30,0.85)','rgba(232,168,56,0.85)','rgba(130,80,180,0.8)','rgba(46,107,168,0.75)','rgba(42,122,90,0.75)','rgba(255,255,255,0.2)'],borderWidth:0}]},options:{responsive:true,cutout:'52%',plugins:{legend:DL}}});
+
+new Chart('d4_compare',{type:'bar',data:{labels:['Overall Violation Rate','Repeat Violation Rate','Avg Resolution (days)','Cases/Week'],datasets:[{label:'Before (Jan 2021)',data:[100,34,3.2,28],backgroundColor:'rgba(201,75,30,0.7)',borderWidth:0},{label:'After (Jun 2021)',data:[65,16,1.8,42],backgroundColor:'rgba(42,122,90,0.8)',borderWidth:0}]},options:{responsive:true,plugins:{legend:DL},scales:{x:{grid:DG,ticks:{...DT,font:{size:9}}},y:{grid:DG,ticks:{...DT}}}}});
+
+new Chart('d4_resolution',{type:'line',data:{labels:['Jan','Feb','Mar','Apr','May','Jun'],datasets:[{label:'My Resolution Time (days)',data:[2.9,2.6,2.2,1.9,1.8,1.8],borderColor:'#E8A838',backgroundColor:'rgba(232,168,56,0.08)',tension:0.4,pointRadius:4,fill:true,borderWidth:2},{label:'Team Average (days)',data:[3.2,3.1,3.2,3.0,2.9,3.0],borderColor:'rgba(255,255,255,0.25)',borderDash:[5,4],pointRadius:3,borderWidth:1,fill:false}]},options:{responsive:true,plugins:{legend:DL},scales:{x:{grid:DG,ticks:DT},y:{grid:DG,ticks:{...DT,callback:v=>v+'d'},min:1,max:4}}}});
+
+new Chart('d4_category',{type:'bar',data:{labels:['Listing Accuracy','IP / Authenticity','Product Safety','Pricing','Shipping'],datasets:[{label:'Before (%)',data:[43,28,14,8,4],backgroundColor:'rgba(201,75,30,0.65)',borderWidth:0},{label:'After (%)',data:[22,14,10,6,3],backgroundColor:'rgba(42,122,90,0.8)',borderWidth:0}]},options:{responsive:true,plugins:{legend:DG},scales:{x:{grid:DG,ticks:{...DT,font:{size:9}}},y:{grid:DG,ticks:{...DT,callback:v=>v+'%'}}}}});
+</script>
+</body>
+</html>
